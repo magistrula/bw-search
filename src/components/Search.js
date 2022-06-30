@@ -60,7 +60,7 @@ const Search = function () {
   }, []);
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" className="u-fullHeight">
       <Box
         px={3}
         py={2}
@@ -81,14 +81,14 @@ const Search = function () {
         </div>
       </Box>
 
-      <Box m={3}>
+      <Box flex="1" p={3} className="u-scrollable">
         {results.map(item => (
           <Box mb={1.5}>
             <SearchResult key={item.id} item={item} toggleIsStarred={toggleIsResultStarred} />
           </Box>
         ))}
       </Box>
-    </>
+    </Box>
   );
 };
 
