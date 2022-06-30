@@ -56,8 +56,10 @@ const Search = function () {
       </Box>
 
       <Box mt={2}>
-        {results.map(result => (
-          <SearchResult key={result.id} result={result} toggleIsStarred={toggleIsResultStarred} />
+        {results.map(item => (
+          <Box mb={1.5}>
+            <SearchResult key={item.id} item={item} toggleIsStarred={toggleIsResultStarred} />
+          </Box>
         ))}
       </Box>
     </Box>

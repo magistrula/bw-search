@@ -2,13 +2,16 @@ import React, { memo, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 
-import AnimalDetails from './AnimalDetails';
-import CompanyDetails from './CompanyDetails';
-import ProductDetails from './ProductDetails';
 import styles from './SearchResult.module.css';
 
-const SearchResult = function ({ result, toggleIsStarred }) {
-  const [isStarred, setIsStarred] = useState(result.starred);
+const PLACEHOLDER_IMAGES = {
+  animal: '/placeholder-animal.png',
+  company: '/placeholder-company.png',
+  product: '/placeholder-product.png',
+};
+
+const SearchResult = function ({ item, toggleIsStarred }) {
+  const [isStarred, setIsStarred] = useState(item.starred);
 
   const toggleIsStarredCb = useCallback(async () => {
     const oldValue = isStarred;
@@ -16,67 +19,64 @@ const SearchResult = function ({ result, toggleIsStarred }) {
     setIsStarred(newValue);
 
     try {
-      await toggleIsStarred(result, newValue);
+      await toggleIsStarred(item, newValue);
     } catch (e) {
       setIsStarred(oldValue);
     }
-  }, [result, toggleIsStarred, isStarred]);
+  }, [item, toggleIsStarred, isStarred]);
 
-  let resultComponent;
+  let col3Content, col4Content;
 
-  if (result.type === 'animal') {
-    resultComponent = (
-      <AnimalDetails
-        image={result.image}
-        name={result.name}
-        scientificName={result.scientificName}
-      />
-    );
+  if (item.type === 'animal') {
+    col3Content = item.scientificName;
   }
 
-  if (result.type === 'company') {
-    resultComponent = (
-      <CompanyDetails
-        address1={result.address.address1}
-        address2={result.address.address2}
-        city={result.address.city}
-        postalCode={result.address.postalCode}
-        state={result.address.state}
-        description={result.description}
-        name={result.name}
-      />
+  if (item.type === 'company') {
+    const { address } = item;
+    col3Content = (
+      <>
+        <div>{address.address1}</div>
+        <div>{address.address2}</div>
+        <div>{`${address.city}, ${address.state} ${address.postalCode}`}</div>
+      </>
     );
+    col4Content = item.description;
   }
 
-  if (result.type === 'product') {
-    resultComponent = (
-      <ProductDetails
-        category={result.category}
-        image={result.image}
-        name={result.name}
-        previewText={result.previewText}
-      />
-    );
-  }
-
-  if (!resultComponent) {
-    return null;
+  if (item.type === 'product') {
+    col3Content = item.category;
+    col4Content = item.previewText;
   }
 
   return (
     <Box
-      py={2}
+      py={0.5}
       px={3}
+      display="flex"
+      alignItems="center"
       onClick={toggleIsStarredCb}
-      className={`u-cursorPointer ${isStarred ? styles.starred : ''}`}
+      className={`u-cursorPointer ${styles['SearchResult']} ${isStarred ? styles.isStarred : ''}`}
     >
-      {resultComponent}
+      <img
+        width="50px"
+        src={item.image || PLACEHOLDER_IMAGES[item.type]}
+        alt={`search result of type "${item.type}"`}
+      />
+      <Box pl={2} className={styles['SearchResult-fixedCol']}>
+        {item.name}
+      </Box>
+      <Box pl={2} className={styles['SearchResult-fixedCol']}>
+        {col3Content}
+      </Box>
+      <Box pl={2}>
+        {col4Content}
+      </Box>
     </Box>
   );
 };
 
 SearchResult.propTypes = {
-  result: PropTypes.object.isRequired,
+  item: PropTypes.object.isRequired,
   toggleIsStarred: PropTypes.func.isRequired,
 };
 

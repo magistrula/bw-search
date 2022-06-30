@@ -1,12 +1,25 @@
-.starred {
-  position:  relative;
+/*TODO: Investigate preferred naming conventions */
+.SearchResult {
+  border: 1px solid lightgray;
+  border-radius: 5px;
 }
 
-.starred:before {
+.SearchResult:hover {
+  background-color: lavender;
+}
+
+.SearchResult-fixedCol {
+  min-width: 25%;
+  max-width: 25%;
+}
+
+.SearchResult.isStarred {
+  position: relative;
+}
+
+.SearchResult.isStarred:before {
   position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 2px;
+  top: 2px;
   content: "⭐️";
-  font-size: 20px;
 }
