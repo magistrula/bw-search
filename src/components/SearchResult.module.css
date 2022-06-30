@@ -4,13 +4,13 @@
   border-radius: 5px;
 }
 
-.SearchResult:hover {
-  background-color: lavender;
-}
-
 .SearchResult-fixedCol {
   min-width: 25%;
   max-width: 25%;
+}
+
+.SearchResult-smallText {
+  font-size: 0.9em;
 }
 
 .SearchResult.isStarred {
@@ -19,7 +19,7 @@
 
 .SearchResult.isStarred:before {
   position: absolute;
-  left: 2px;
-  top: 2px;
-  content: "⭐️";
+  left: 5px;
+  top: 3px;
+  content: '⭐️';
 }

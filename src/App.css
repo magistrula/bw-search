@@ -6,3 +6,17 @@ body {
 .u-cursorPointer {
   cursor: pointer;
 }
+
+/*Future Work: comprehensive color & border utility classes*/
+
+.u-bgBlue {
+  background-color: aliceblue;
+}
+
+.u-bgHoverLavender:hover {
+  background-color: lavender;
+}
+
+.u-borderBottom {
+  border-bottom: 1px solid lightgray;
+}

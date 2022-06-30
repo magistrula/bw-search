@@ -46,23 +46,35 @@ const Search = function () {
   }, [getStarredResults]);
 
   return (
-    <Box m={5}>
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <TextField variant="outlined" placeholder="Search..." onChange={getQueryResults} />
+    <>
+      <Box
+        px={3}
+        py={2}
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        className="u-bgBlue u-borderBottom"
+      >
+        <TextField
+          variant="outlined"
+          size="small"
+          placeholder="Search for ..."
+          onChange={getQueryResults}
+        />
         <div>
           <strong>Starred Results: </strong>
           {starredSearchResults.length}
         </div>
       </Box>
 
-      <Box mt={2}>
+      <Box m={3}>
         {results.map(item => (
           <Box mb={1.5}>
             <SearchResult key={item.id} item={item} toggleIsStarred={toggleIsResultStarred} />
           </Box>
         ))}
       </Box>
-    </Box>
+    </>
   );
 };
 

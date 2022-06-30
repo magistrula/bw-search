@@ -34,11 +34,11 @@ const SearchResult = function ({ item, toggleIsStarred }) {
   if (item.type === 'company') {
     const { address } = item;
     col3Content = (
-      <>
+      <div className={styles['SearchResult-smallText']}>
         <div>{address.address1}</div>
         <div>{address.address2}</div>
         <div>{`${address.city}, ${address.state} ${address.postalCode}`}</div>
-      </>
+      </div>
     );
     col4Content = item.description;
   }
@@ -55,7 +55,12 @@ const SearchResult = function ({ item, toggleIsStarred }) {
       display="flex"
       alignItems="center"
       onClick={toggleIsStarredCb}
-      className={`u-cursorPointer ${styles['SearchResult']} ${isStarred ? styles.isStarred : ''}`}
+      className={[
+        'u-cursorPointer',
+        'u-bgHoverLavender',
+        styles['SearchResult'],
+        isStarred ? styles.isStarred : ''
+      ]}
     >
       <img
         width="50px"
@@ -68,7 +73,7 @@ const SearchResult = function ({ item, toggleIsStarred }) {
       <Box pl={2} className={styles['SearchResult-fixedCol']}>
         {col3Content}
       </Box>
-      <Box pl={2}>
+      <Box pl={2} className={styles['SearchResult-smallText']}>
         {col4Content}
       </Box>
     </Box>
