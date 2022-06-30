@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
-
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 import { getSearchResults, patchSearchResult } from '../utils/queries';
 import SearchResult from './SearchResult';
 
+const DEFAULT_RESULTS_PER_PAGE = 10;
+
 const Search = function () {
   // Future work: enable user to specify results per page
-  const [resultsPerPage] = useState(10);
+  const [resultsPerPage] = useState(DEFAULT_RESULTS_PER_PAGE);
   const [results, setResults] = useState([]);
-  const [starredSearchResults, setStarredSearchResults] = useState([]);
+  const [starredResults, setStarredResults] = useState([]);
 
   const getQueryResults = useCallback(
     async event => {
@@ -30,20 +31,33 @@ const Search = function () {
   );
 
   const getStarredResults = useCallback(async () => {
-    await getSearchResults({ starred: true }).then(setStarredSearchResults);
+    const returnedResults = await getSearchResults({ starred: true });
+    setStarredResults(returnedResults);
   }, []);
 
   const toggleIsResultStarred = useCallback(
-    async (result, isStarred) => {
-      await patchSearchResult(result.id, { starred: isStarred });
-      getStarredResults();
+    async item => {
+      // TODO: Rework this so that the UI reflects the expected update immediately
+      // and rolls it back if there is an error on save.
+      const updatedItem = await patchSearchResult(item.id, { starred: !item.starred });
+
+      // TODO: In an Ember app, the Ember store would update the target record on successful patch,
+      // and the SearchItem component that renders that record would automatically update.
+      // What is the right way to do this in React?
+      const updatedResults = results.map(r => (r.id === item.id ? updatedItem : r));
+      setResults(updatedResults);
+
+      const updatedStarredResults = updatedItem.starred
+        ? starredResults.concat(updatedItem)
+        : starredResults.filter(r => r.id !== item.id);
+      setStarredResults(updatedStarredResults);
     },
-    [getStarredResults]
+    [results, starredResults]
   );
 
   useEffect(() => {
     getStarredResults();
-  }, [getStarredResults]);
+  }, []);
 
   return (
     <>
@@ -63,7 +77,7 @@ const Search = function () {
         />
         <div>
           <strong>Starred Results: </strong>
-          {starredSearchResults.length}
+          {starredResults.length}
         </div>
       </Box>
 

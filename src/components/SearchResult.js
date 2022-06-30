@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 
@@ -11,19 +11,9 @@ const PLACEHOLDER_IMAGES = {
 };
 
 const SearchResult = function ({ item, toggleIsStarred }) {
-  const [isStarred, setIsStarred] = useState(item.starred);
-
   const toggleIsStarredCb = useCallback(async () => {
-    const oldValue = isStarred;
-    const newValue = !oldValue;
-    setIsStarred(newValue);
-
-    try {
-      await toggleIsStarred(item, newValue);
-    } catch (e) {
-      setIsStarred(oldValue);
-    }
-  }, [item, toggleIsStarred, isStarred]);
+    return toggleIsStarred(item);
+  }, [item, toggleIsStarred]);
 
   let col3Content, col4Content;
 
@@ -59,7 +49,7 @@ const SearchResult = function ({ item, toggleIsStarred }) {
         'u-cursorPointer',
         'u-bgHoverLavender',
         styles['SearchResult'],
-        isStarred ? styles.isStarred : ''
+        item.starred ? styles.isStarred : '',
       ]}
     >
       <img
