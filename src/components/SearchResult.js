@@ -66,6 +66,7 @@ const SearchResult = function ({ result, toggleIsStarred }) {
   return (
     <Box
       py={2}
+      px={3}
       onClick={toggleIsStarredCb}
       className={`u-cursorPointer ${isStarred ? styles.starred : ''}`}
     >

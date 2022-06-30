@@ -1,3 +1,12 @@
 .starred {
-  background-color: lightyellow;
+  position:  relative;
+}
+
+.starred:before {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  content: "⭐️";
+  font-size: 20px;
 }
