@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 
-const PLACEHOLDER_IMAGE = '/logo192.png';
+const PLACEHOLDER_IMAGE = '/placeholder-product.png';
 
 const ProductResult = function ({ category, image, name, previewText }) {
   return (
