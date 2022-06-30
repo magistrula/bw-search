@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-import { getSearchResults, getStarredSearchResults, patchSearchResult } from '../utils/queries';
+import { getSearchResults, patchSearchResult } from '../utils/queries';
 import SearchResult from './SearchResult';
 
 const Search = function () {
@@ -13,19 +13,24 @@ const Search = function () {
   const [starredSearchResults, setStarredSearchResults] = useState([]);
 
   const getQueryResults = useCallback(
-    event => {
-      getSearchResults(event.target.value, {
-        limit: resultsPerPage,
-        page: 1,
-      }).then(returnedResults => {
-        setResults(returnedResults);
+    async event => {
+      if (!event.target.value) {
+        setResults([]);
+        return;
+      }
+
+      const returnedResults = await getSearchResults({
+        q: event.target.value,
+        _limit: resultsPerPage,
+        _page: 1,
       });
+      setResults(returnedResults);
     },
     [resultsPerPage]
   );
 
   const getStarredResults = useCallback(async () => {
-    await getStarredSearchResults().then(setStarredSearchResults);
+    await getSearchResults({ starred: true }).then(setStarredSearchResults);
   }, []);
 
   const toggleIsResultStarred = useCallback(

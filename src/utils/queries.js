@@ -2,18 +2,9 @@ import axios from 'axios';
 
 const API_HOST = 'http://localhost:3001';
 
-export async function getSearchResults(searchTerm, { page, limit }) {
-  const searchParam = `q=${searchTerm}`;
-  const pageParam = page ? `&_page=${page}` : '';
-  const limitParam = limit ? `&_limit=${limit}` : '';
-  const queryParams = `${searchParam}${pageParam}${limitParam}`;
-
-  const response = await axios.get(`${API_HOST}/search?${queryParams}`);
-  return response.data;
-}
-
-export async function getStarredSearchResults() {
-  const response = await axios.get(`${API_HOST}/search?starred=true`);
+export async function getSearchResults(paramObj) {
+  const params = Object.keys(paramObj).map(key => `${key}=${paramObj[key]}`);
+  const response = await axios.get(`${API_HOST}/search?${params.join('&')}`);
   return response.data;
 }
 
