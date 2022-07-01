@@ -7,7 +7,7 @@ import SearchResult from './SearchResult';
 
 const DEFAULT_RESULTS_PER_PAGE = 10;
 
-const Search = function () {
+const Search = function() {
   // Future work: enable user to specify results per page
   const [resultsPerPage] = useState(DEFAULT_RESULTS_PER_PAGE);
   const [results, setResults] = useState([]);

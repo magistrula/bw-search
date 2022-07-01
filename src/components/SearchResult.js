@@ -10,32 +10,30 @@ const PLACEHOLDER_IMAGES = {
   product: '/placeholder-product.png',
 };
 
-const SearchResult = function ({ item, toggleIsStarred }) {
-  const toggleIsStarredCb = useCallback(async () => {
-    return toggleIsStarred(item);
+const SearchResult = function({ item, toggleIsStarred }) {
+  const toggleIsStarredCb = useCallback(() => {
+    toggleIsStarred(item);
   }, [item, toggleIsStarred]);
 
   let col3Content, col4Content;
 
   if (item.type === 'animal') {
     col3Content = item.scientificName;
-  }
-
-  if (item.type === 'company') {
+  } else if (item.type === 'company') {
     const { address } = item;
     col3Content = (
-      <div className={styles['SearchResult-smallText']}>
+      <div className={styles['u-smallText']}>
         <div>{address.address1}</div>
         <div>{address.address2}</div>
         <div>{`${address.city}, ${address.state} ${address.postalCode}`}</div>
       </div>
     );
     col4Content = item.description;
-  }
-
-  if (item.type === 'product') {
+  } else if (item.type === 'product') {
     col3Content = item.category;
     col4Content = item.previewText;
+  } else {
+    return null;
   }
 
   return (
@@ -44,13 +42,13 @@ const SearchResult = function ({ item, toggleIsStarred }) {
       px={3}
       display="flex"
       alignItems="center"
-      onClick={toggleIsStarredCb}
       className={[
         'u-cursorPointer',
         'u-bgHoverLavender',
         styles['SearchResult'],
         item.starred ? styles.isStarred : '',
       ]}
+      onClick={toggleIsStarredCb}
     >
       <img
         width="50px"
@@ -63,7 +61,7 @@ const SearchResult = function ({ item, toggleIsStarred }) {
       <Box pl={2} className={styles['SearchResult-fixedCol']}>
         {col3Content}
       </Box>
-      <Box pl={2} className={styles['SearchResult-smallText']}>
+      <Box pl={2} flexGrow={1} className={styles['SearchResult-smallText']}>
         {col4Content}
       </Box>
     </Box>
