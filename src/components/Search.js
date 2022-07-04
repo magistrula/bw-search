@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-import { getSearchResults, patchSearchResult } from '../utils/queries';
+import { getItems, patchItem } from '../queries/search';
 import SearchResult from './SearchResult';
 
 const DEFAULT_RESULTS_PER_PAGE = 10;
@@ -10,53 +10,53 @@ const DEFAULT_RESULTS_PER_PAGE = 10;
 const Search = function() {
   // Future work: enable user to specify results per page
   const [resultsPerPage] = useState(DEFAULT_RESULTS_PER_PAGE);
-  const [results, setResults] = useState([]);
-  const [starredResults, setStarredResults] = useState([]);
+  const [items, setItems] = useState([]);
+  const [starredItems, setStarredItems] = useState([]);
 
-  const getQueryResults = useCallback(
+  const getQueryItems = useCallback(
     async event => {
       if (!event.target.value) {
-        setResults([]);
+        setItems([]);
         return;
       }
 
-      const returnedResults = await getSearchResults({
+      const returnedResults = await getItems({
         q: event.target.value,
         _limit: resultsPerPage,
         _page: 1,
       });
-      setResults(returnedResults);
+      setItems(returnedResults);
     },
     [resultsPerPage]
   );
 
-  const getStarredResults = useCallback(async () => {
-    const returnedResults = await getSearchResults({ starred: true });
-    setStarredResults(returnedResults);
+  const getStarredItems = useCallback(async () => {
+    const returnedResults = await getItems({ starred: true });
+    setStarredItems(returnedResults);
   }, []);
 
   const toggleIsResultStarred = useCallback(
     async item => {
       // TODO: Rework this so that the UI reflects the expected update immediately
       // and rolls it back if there is an error on save.
-      const updatedItem = await patchSearchResult(item.id, { starred: !item.starred });
+      const updatedItem = await patchItem(item.id, { starred: !item.starred });
 
       // TODO: In an Ember app, the Ember store would update the target record on successful patch,
       // and the SearchItem component that renders that record would automatically update.
       // What is the right way to do this in React?
-      const updatedResults = results.map(r => (r.id === item.id ? updatedItem : r));
-      setResults(updatedResults);
+      const updatedItems = items.map(r => (r.id === item.id ? updatedItem : r));
+      setItems(updatedItems);
 
-      const updatedStarredResults = updatedItem.starred
-        ? starredResults.concat(updatedItem)
-        : starredResults.filter(r => r.id !== item.id);
-      setStarredResults(updatedStarredResults);
+      const updatedStarredItems = updatedItem.starred
+        ? starredItems.concat(updatedItem)
+        : starredItems.filter(r => r.id !== item.id);
+      setStarredItems(updatedStarredItems);
     },
-    [results, starredResults]
+    [items, starredItems]
   );
 
   useEffect(() => {
-    getStarredResults();
+    getStarredItems();
   }, []);
 
   return (
@@ -73,16 +73,16 @@ const Search = function() {
           variant="outlined"
           size="small"
           placeholder="Search for ..."
-          onChange={getQueryResults}
+          onChange={getQueryItems}
         />
         <div>
-          <strong>Starred Results: </strong>
-          {starredResults.length}
+          <strong>Starred Items: </strong>
+          {starredItems.length}
         </div>
       </Box>
 
       <Box flex="1" p={3} className="u-scrollable">
-        {results.map(item => (
+        {items.map(item => (
           <Box mb={1.5}>
             <SearchResult key={item.id} item={item} toggleIsStarred={toggleIsResultStarred} />
           </Box>
