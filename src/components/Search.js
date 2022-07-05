@@ -83,8 +83,8 @@ const Search = function() {
 
       <Box flex="1" p={3} className="u-scrollable">
         {items.map(item => (
-          <Box mb={1.5}>
-            <SearchResult key={item.id} item={item} toggleIsStarred={toggleIsResultStarred} />
+          <Box mb={1.5} key={item.id}>
+            <SearchResult item={item} toggleIsStarred={toggleIsResultStarred} />
           </Box>
         ))}
       </Box>
