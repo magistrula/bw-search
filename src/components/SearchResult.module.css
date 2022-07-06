@@ -4,6 +4,19 @@
   border-radius: 5px;
 }
 
+@media (max-width: 599px) {
+  .SearchResult-nameCol {
+    flex-grow: 1;
+  }
+}
+
+@media (min-width: 600px) {
+  .SearchResult-nameCol {
+    min-width: 30%;
+    max-width: 30%;
+  }
+}
+
 .SearchResult-fixedCol {
   min-width: 25%;
   max-width: 25%;

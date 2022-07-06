@@ -55,13 +55,13 @@ const SearchResult = function ({ item, toggleIsStarred }) {
         src={item.image || PLACEHOLDER_IMAGES[item.type]}
         alt={`search result of type "${item.type}"`}
       />
-      <Box pl={2} className={styles['SearchResult-fixedCol']}>
+      <Box pl={2} className={styles['SearchResult-nameCol']}>
         {item.name}
       </Box>
-      <Box pl={2} className={styles['SearchResult-fixedCol']}>
+      <Box pl={2} className={['u-hiddenSm', styles['SearchResult-fixedCol']]}>
         {col3Content}
       </Box>
-      <Box pl={2} flexGrow={1} className={styles['SearchResult-smallText']}>
+      <Box pl={2} flexGrow={1} className={['u-hiddenXs', styles['SearchResult-smallText']]}>
         {col4Content}
       </Box>
     </Box>

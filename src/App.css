@@ -21,6 +21,18 @@ body {
   font-size: 0.9em;
 }
 
+@media (max-width: 599px) {
+  .u-hiddenXs {
+    display: none;
+  }
+}
+
+@media (max-width: 899px) {
+  .u-hiddenSm {
+    display: none;
+  }
+}
+
 /*Future Work: comprehensive color & border utility classes*/
 
 .u-bgBlue {
