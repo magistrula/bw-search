@@ -8,7 +8,7 @@ import { useAppContext } from '../contexts/AppContext';
 
 const DEFAULT_RESULTS_PER_PAGE = 10;
 
-const Search = function() {
+const Search = function () {
   const {
     state: { search },
     dispatch,
@@ -24,33 +24,36 @@ const Search = function() {
     [dispatch]
   );
 
-  const getSearchResults = useCallback(async queryTerm => {
-    if (!queryTerm) {
-      dispatch({
-        type: 'SET_SEARCH_RESULTS',
-        payload: { items: [] },
-      });
-      return;
-    }
+  const getSearchResults = useCallback(
+    async queryTerm => {
+      if (!queryTerm) {
+        dispatch({
+          type: 'SET_SEARCH_RESULTS',
+          payload: { items: [] },
+        });
+        return;
+      }
 
-    try {
-      const items = await getItems({
-        q: queryTerm,
-        _limit: DEFAULT_RESULTS_PER_PAGE,
-        _page: 1,
-      });
-      dispatch({
-        type: 'SET_SEARCH_RESULTS',
-        payload: { items },
-      });
-    } catch (e) {
-      dispatch({
-        type: 'FLASH_ERROR',
-        payload: { message: 'Oops! Could not fetch search results.' }
-      });
-      throw e;
-    }
-  }, [dispatch]);
+      try {
+        const items = await getItems({
+          q: queryTerm,
+          _limit: DEFAULT_RESULTS_PER_PAGE,
+          _page: 1,
+        });
+        dispatch({
+          type: 'SET_SEARCH_RESULTS',
+          payload: { items },
+        });
+      } catch (e) {
+        dispatch({
+          type: 'FLASH_ERROR',
+          payload: { message: 'Oops! Could not fetch search results.' },
+        });
+        throw e;
+      }
+    },
+    [dispatch]
+  );
 
   const getStarredItems = useCallback(async () => {
     try {
@@ -62,7 +65,7 @@ const Search = function() {
     } catch (e) {
       dispatch({
         type: 'FLASH_ERROR',
-        payload: { message: 'Oops! Could not fetch starred items.' }
+        payload: { message: 'Oops! Could not fetch starred items.' },
       });
       throw e;
     }

@@ -10,7 +10,7 @@ const PLACEHOLDER_IMAGES = {
   product: '/placeholder-product.png',
 };
 
-const SearchResult = function({ item, toggleIsStarred }) {
+const SearchResult = function ({ item, toggleIsStarred }) {
   const toggleIsStarredCb = useCallback(() => {
     toggleIsStarred(item);
   }, [item, toggleIsStarred]);
