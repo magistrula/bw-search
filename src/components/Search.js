@@ -1,5 +1,8 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 
 import { getItems, patchItem } from '../queries/search';
@@ -10,9 +13,14 @@ const DEFAULT_RESULTS_PER_PAGE = 10;
 
 const Search = function () {
   const {
-    state: { search },
     dispatch,
+    state: { search },
   } = useAppContext();
+  const [isFilteredByStarred, setIsFilteredByStarred] = useState(false);
+
+  const toggleFilterByStarred = useCallback(() => {
+    setIsFilteredByStarred(!isFilteredByStarred);
+  }, [isFilteredByStarred]);
 
   const setQueryTerm = useCallback(
     async event => {
@@ -35,11 +43,12 @@ const Search = function () {
       }
 
       try {
-        const items = await getItems({
-          q: queryTerm,
-          _limit: DEFAULT_RESULTS_PER_PAGE,
-          _page: 1,
-        });
+        const queryProps = { q: queryTerm, _limit: DEFAULT_RESULTS_PER_PAGE, _page: 1 };
+        if (isFilteredByStarred) {
+          queryProps.starred = true;
+        }
+
+        const items = await getItems(queryProps);
         dispatch({
           type: 'SET_SEARCH_RESULTS',
           payload: { items },
@@ -52,7 +61,7 @@ const Search = function () {
         throw e;
       }
     },
-    [dispatch]
+    [dispatch, isFilteredByStarred]
   );
 
   const getStarredItems = useCallback(async () => {
@@ -111,12 +120,23 @@ const Search = function () {
         justifyContent="space-between"
         className="u-bgBlue u-borderBottom"
       >
-        <TextField
-          variant="outlined"
-          size="small"
-          placeholder="Search for ..."
-          onChange={setQueryTerm}
-        />
+        <Box display="flex" alignItems="center">
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Search for ..."
+            onChange={setQueryTerm}
+          />
+
+          <Box ml={3}>
+            <FormControlLabel
+              checked={isFilteredByStarred}
+              control={<Checkbox />}
+              label="Starred Only"
+              onChange={toggleFilterByStarred}
+            />
+          </Box>
+        </Box>
         <div>
           <strong>Starred Items: </strong>
           {search.starredItemIds.length}
