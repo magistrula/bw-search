@@ -23,20 +23,35 @@ body {
 
 @media (max-width: 599px) {
   .u-hiddenXs {
-    display: none;
+    display: none !important;
   }
 }
 
 @media (max-width: 899px) {
   .u-hiddenSm {
-    display: none;
+    display: none !important;
   }
+}
+
+.ModalBody {
+  max-height: 70vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  border: 1px solid #333;
+  border-radius: 5px;
+  box-shadow: 10px;
 }
 
 /*Future Work: comprehensive color & border utility classes*/
 
 .u-bgBlue {
   background-color: aliceblue;
+}
+
+.u-bgLavender {
+  background-color: lavender;
 }
 
 .u-bgHoverLavender:hover {

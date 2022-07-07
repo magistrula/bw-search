@@ -4,6 +4,10 @@
   border-radius: 5px;
 }
 
+.SearchResult-image {
+  width: 50px;
+}
+
 @media (max-width: 599px) {
   .SearchResult-nameCol {
     flex-grow: 1;
@@ -26,13 +30,19 @@
   font-size: 0.9em;
 }
 
-.SearchResult.isStarred {
-  position: relative;
+.SearchResult .SearchResult-starIcon {
+  visibility: hidden;
 }
 
-.SearchResult.isStarred:before {
-  position: absolute;
-  left: 5px;
-  top: 3px;
-  content: '⭐️';
+.SearchResult:hover .SearchResult-starIcon {
+  visibility: visible;
+}
+
+.SearchResult.isStarred .SearchResult-starIcon {
+  visibility: visible;
+}
+
+.SearchResult-modalBody {
+  width: 70vw;
+  max-width: 350px;
 }
