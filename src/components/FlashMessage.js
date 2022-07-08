@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
+import { closeFlash } from '../actions/flash';
 import { useAppContext } from '../contexts/AppContext';
 
 const FlashMessage = function () {
@@ -14,7 +15,7 @@ const FlashMessage = function () {
   const handleClose = useCallback(
     (event, reason) => {
       if (reason !== 'clickaway') {
-        dispatch({ type: 'CLOSE_FLASH' });
+        dispatch(closeFlash());
       }
     },
     [dispatch]

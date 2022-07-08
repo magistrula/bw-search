@@ -1,0 +1,7 @@
+.SearchHeader {
+  height: 60px;
+}
+
+.SearchHeader-inputField {
+  min-width: 100px;
+}
