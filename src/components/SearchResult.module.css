@@ -26,18 +26,11 @@
   max-width: 25%;
 }
 
-.SearchResult-smallText {
-  font-size: 0.9em;
-}
-
 .SearchResult .SearchResult-starIcon {
   visibility: hidden;
 }
 
-.SearchResult:hover .SearchResult-starIcon {
-  visibility: visible;
-}
-
+.SearchResult:hover .SearchResult-starIcon,
 .SearchResult.isStarred .SearchResult-starIcon {
   visibility: visible;
 }

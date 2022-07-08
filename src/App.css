@@ -17,10 +17,6 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-.u-smallText {
-  font-size: 0.9em;
-}
-
 @media (max-width: 599px) {
   .u-hiddenXs {
     display: none !important;

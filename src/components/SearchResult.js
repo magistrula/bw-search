@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
+import Typography from '@mui/material/Typography';
 
 import { useIdentity, useIdentityDetail, useDescription } from '../hooks/search';
 import styles from './SearchResult.module.css';
@@ -50,13 +51,13 @@ const SearchResult = function ({ item, toggleIsStarred }) {
             alt={`search result of type "${item.type}"`}
           />
           <Box pl={2} className={styles['SearchResult-nameCol']}>
-            {identity}
+            <Typography variant="bodyBold">{identity}</Typography>
           </Box>
-          <Box pl={2} className={['u-hiddenSm', 'u-smallText', styles['SearchResult-fixedCol']]}>
-            {identityDetail}
+          <Box pl={2} className={['u-hiddenSm', styles['SearchResult-fixedCol']]}>
+            <Typography variant="bodySmall">{identityDetail}</Typography>
           </Box>
-          <Box pl={2} flexGrow={1} className={['u-hiddenXs', styles['SearchResult-smallText']]}>
-            {description}
+          <Box pl={2} flexGrow={1} className="u-hiddenXs">
+            <Typography variant="bodySmall">{description}</Typography>
           </Box>
         </Box>
 
@@ -89,7 +90,7 @@ const SearchResult = function ({ item, toggleIsStarred }) {
           >
             {starIcon}
             <Box ml={0.5}>
-              <strong>{identity}</strong>
+              <Typography variant="bodyBold">{identity}</Typography>
             </Box>
           </Box>
           {identityDetail && <Box mt={1.5}>{identityDetail}</Box>}
