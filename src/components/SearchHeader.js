@@ -39,15 +39,19 @@ const SearchHeader = function ({
               onChange={changeSearchTerm}
             />
 
-            <Box ml={1} display="flex" alignItems="center" className="u-cursorPointer" onClick={toggleFilterByStarred}>
+            <Box
+              ml={1}
+              display="flex"
+              alignItems="center"
+              className="u-cursorPointer"
+              onClick={toggleFilterByStarred}
+            >
               <Checkbox
                 checkedIcon={<StarIcon />}
                 icon={<StarBorderOutlinedIcon />}
                 checked={isFilteredByStarred}
               />
-              <div className="u-hiddenXs">
-                Starred Only
-              </div>
+              <div className="u-hiddenXs">Starred Only</div>
             </Box>
           </>
         )}

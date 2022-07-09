@@ -25,6 +25,6 @@ export default createTheme({
     },
     bodyBold: {
       fontWeight: 500,
-    }
-  }
+    },
+  },
 });
