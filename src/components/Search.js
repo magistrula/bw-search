@@ -1,13 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
 import Box from '@mui/material/Box';
 
-import {
-  failedUpdateItem,
-  setQueryTerm,
-  setSearchResults,
-  setStarredItems,
-  willUpdateItem,
-} from '../actions/search';
 import { flashError } from '../actions/flash';
 import { getItems, patchItem } from '../queries/search';
 import SearchHeader from './SearchHeader';
@@ -17,112 +11,104 @@ import { useAppContext } from '../contexts/AppContext';
 const DEFAULT_RESULTS_PER_PAGE = 10;
 
 const Search = function () {
-  const {
-    dispatch,
-    state: { search },
-  } = useAppContext();
+  const { dispatch } = useAppContext();
+  const queryClient = useQueryClient();
   const [isFilteredByStarred, setIsFilteredByStarred] = useState(false);
-  const [isSearchEnabled, setIsSearchEnabled] = useState(true);
+  const [isShowingStarredItems, setIsShowingStarredItems] = useState(false);
+  const [queryTerm, setQueryTerm] = useState('');
 
-  const toggleFilterByStarred = useCallback(() => {
-    setIsFilteredByStarred(!isFilteredByStarred);
-  }, [isFilteredByStarred]);
+  const itemsQuery = useQuery(
+    ['items', queryTerm, isFilteredByStarred],
+    () => {
+      const params = {
+        ...{ q: queryTerm, _limit: DEFAULT_RESULTS_PER_PAGE, _page: 1 },
+        ...(isFilteredByStarred ? { starred: true } : {}),
+      };
+      return getItems(params);
+    },
+    {
+      enabled: !!queryTerm,
+      retry: false,
+      initialData: [],
+      onError(err) {
+        dispatch(flashError('Oops! Could not fetch items'));
+        throw err;
+      },
+    }
+  );
+
+  const starredItemsQuery = useQuery(
+    'starredItems',
+    () => {
+      return getItems({ starred: true });
+    },
+    {
+      initialData: [],
+      retry: false,
+      onError(err) {
+        dispatch(flashError('Oops! Could not fetch starred items'));
+        throw err;
+      },
+    }
+  );
+
+  const starItemMutation = useMutation(
+    item => {
+      return patchItem(item.id, { starred: !item.starred });
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries('items');
+        queryClient.invalidateQueries('starredItems');
+      },
+      onError(err) {
+        dispatch(flashError());
+        throw err;
+      },
+    }
+  );
 
   const changeSearchTerm = useCallback(
     event => {
-      dispatch(setQueryTerm(event.target.value));
+      setQueryTerm(event.target.value);
     },
-    [dispatch]
+    [setQueryTerm]
   );
 
-  const getSearchResults = useCallback(
-    async queryTerm => {
-      if (!queryTerm) {
-        dispatch(setSearchResults([]));
-        return;
-      }
+  const toggleFilterByStarred = useCallback(() => {
+    setIsFilteredByStarred(!isFilteredByStarred);
+  }, [isFilteredByStarred, setIsFilteredByStarred]);
 
-      try {
-        const queryProps = {
-          ...{ q: queryTerm, _limit: DEFAULT_RESULTS_PER_PAGE, _page: 1 },
-          ...(isFilteredByStarred ? { starred: true } : {}),
-        };
-        const items = await getItems(queryProps);
-        dispatch(setSearchResults(items));
-      } catch (e) {
-        dispatch(flashError('Oops! Could not fetch search results.'));
-        throw e;
-      }
-    },
-    [dispatch, isFilteredByStarred]
-  );
+  const showStarredItems = useCallback(() => {
+    setIsShowingStarredItems(true);
+  }, []);
 
-  const getStarredItems = useCallback(async () => {
-    try {
-      const starredItems = await getItems({ starred: true });
-      dispatch(setStarredItems(starredItems));
-    } catch (e) {
-      dispatch(flashError('Oops! Could not fetch starred items.'));
-      throw e;
-    }
-  }, [dispatch]);
-
-  const showAllStarredItems = useCallback(async () => {
-    try {
-      const items = await getItems({ starred: true });
-      dispatch(setSearchResults(items));
-      dispatch(setStarredItems(items));
-      setIsSearchEnabled(false);
-    } catch (e) {
-      dispatch(flashError('Oops! Could not fetch starred items.'));
-      throw e;
-    }
-  }, [dispatch]);
+  const showSearchField = useCallback(() => {
+    setIsShowingStarredItems(false);
+  }, []);
 
   const toggleIsItemStarred = useCallback(
-    async item => {
-      const updatedProps = { starred: !item.starred };
-      dispatch(willUpdateItem({ ...item, ...updatedProps }));
-
-      try {
-        await patchItem(item.id, updatedProps);
-      } catch (e) {
-        dispatch(failedUpdateItem(item));
-        dispatch(flashError());
-        throw e;
-      }
+    item => {
+      return starItemMutation.mutateAsync(item);
     },
-    [dispatch]
+    [starItemMutation]
   );
-
-  const enableSearch = useCallback(() => {
-    setIsSearchEnabled(true);
-    getSearchResults(search.queryTerm);
-  }, [getSearchResults, search.queryTerm]);
-
-  useEffect(() => {
-    getSearchResults(search.queryTerm);
-  }, [search.queryTerm, getSearchResults]);
-
-  useEffect(() => {
-    getStarredItems();
-  }, [getStarredItems]);
 
   return (
     <Box display="flex" flexDirection="column" className="u-fullHeight">
       <SearchHeader
-        isFilteredByStarred={isFilteredByStarred}
-        isSearchEnabled={isSearchEnabled}
-        numStarredItems={search.starredItemIds.length}
-        queryTerm={search.queryTerm}
-        enableSearch={enableSearch}
         changeSearchTerm={changeSearchTerm}
-        showAllStarredItems={showAllStarredItems}
+        enableSearch={showSearchField}
+        isFilteredByStarred={isFilteredByStarred}
+        isSearchEnabled={!isShowingStarredItems}
+        numStarredItems={starredItemsQuery.data.length}
+        queryTerm={queryTerm}
+        showAllStarredItems={showStarredItems}
         toggleFilterByStarred={toggleFilterByStarred}
       />
 
       <Box flex="1" p={3} className="u-scrollable">
-        {search.items.map(item => (
+        {(isShowingStarredItems ? starredItemsQuery : itemsQuery).data.map(item => (
           <Box mb={1.5} key={item.id}>
             <SearchResult item={item} toggleIsStarred={toggleIsItemStarred} />
           </Box>

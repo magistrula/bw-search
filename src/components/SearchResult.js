@@ -7,7 +7,7 @@ import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import Typography from '@mui/material/Typography';
 
-import { useIdentity, useIdentityDetail, useDescription } from '../hooks/search';
+import { useItemIdentity, useItemIdentityDetail, useItemDescription } from '../hooks/search';
 import styles from './SearchResult.module.css';
 
 const PLACEHOLDER_IMAGES = {
@@ -19,19 +19,29 @@ const PLACEHOLDER_IMAGES = {
 const SearchResult = function ({ item, toggleIsStarred }) {
   const [starIcon, setStarIcon] = useState(null);
   const [isModalActive, setIsModalActive] = useState(false);
+  const [isStarred, setIsStarred] = useState(item.starred);
 
-  const identity = useIdentity(item);
-  const identityDetail = useIdentityDetail(item);
-  const description = useDescription(item);
+  const identity = useItemIdentity(item);
+  const identityDetail = useItemIdentityDetail(item);
+  const description = useItemDescription(item);
 
-  const toggleIsStarredCb = useCallback(() => toggleIsStarred(item), [item, toggleIsStarred]);
+  const toggleIsStarredCb = useCallback(() => {
+    const originalIsStarred = isStarred;
+    try {
+      setIsStarred(!originalIsStarred);
+      toggleIsStarred(item);
+    } catch (e) {
+      setIsStarred(originalIsStarred);
+      throw e;
+    }
+  }, [isStarred, item, toggleIsStarred]);
   const openModal = useCallback(() => setIsModalActive(true), []);
   const closeModal = useCallback(() => setIsModalActive(false), []);
 
   useEffect(() => {
-    const IconType = item.starred ? StarIcon : StarBorderOutlinedIcon;
+    const IconType = isStarred ? StarIcon : StarBorderOutlinedIcon;
     setStarIcon(<IconType color="info" />);
-  }, [item.starred]);
+  }, [isStarred]);
 
   return (
     <>
@@ -41,7 +51,7 @@ const SearchResult = function ({ item, toggleIsStarred }) {
           'u-cursorPointer',
           'u-bgHoverLavender',
           styles['SearchResult'],
-          item.starred ? styles.isStarred : '',
+          isStarred ? styles.isStarred : '',
         ]}
       >
         <Box display="flex" alignItems="center" flexGrow="1" py={1} pl={2} onClick={openModal}>

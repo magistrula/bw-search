@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 // This might be overengineering because right now all models use `name`,
 // but you could end up with some models that have `title` and some that have `name`,
 // or you could decide that animals should use the `scientificMame`` as their primary name.
-export function useIdentity(item) {
+export function useItemIdentity(item) {
   const [identity, setIdentity] = useState(null);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export function useIdentity(item) {
   return identity;
 }
 
-export function useIdentityDetail(item) {
+export function useItemIdentityDetail(item) {
   const [identityDetail, setIdentityDetail] = useState(null);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export function useIdentityDetail(item) {
   return identityDetail;
 }
 
-export function useDescription(item) {
+export function useItemDescription(item) {
   const [description, setDescription] = useState(null);
 
   useEffect(() => {
