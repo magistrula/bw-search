@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
@@ -8,13 +9,38 @@ import StarIcon from '@mui/icons-material/Star';
 import Typography from '@mui/material/Typography';
 
 import { useItemIdentity, useItemIdentityDetail, useItemDescription } from '../hooks/search';
-import styles from './SearchResult.module.css';
 
 const PLACEHOLDER_IMAGES = {
   animal: '/placeholder-animal.png',
   company: '/placeholder-company.png',
   product: '/placeholder-product.png',
 };
+
+const ItemImg = styled.img`
+  width: 50px;
+`;
+
+const Col2 = styled(Box)`
+  @media (max-width: 599px) {
+    flex-grow: 1;
+  }
+  @media (min-width: 600px) {
+    min-width: 30%;
+    max-width: 30%;
+  }
+`;
+
+const Col3 = styled(Box)`
+  min-width: 25%;
+  max-width: 25%;
+`;
+
+const StarIconContainer = styled(Box)`
+  visibility: ${props => (props.isStarred ? 'visible' : 'hidden')};
+  .SearchResult:hover & {
+    visibility: visible;
+  }
+`;
 
 const SearchResult = function ({ item, toggleIsStarred }) {
   const [starIcon, setStarIcon] = useState(null);
@@ -47,51 +73,40 @@ const SearchResult = function ({ item, toggleIsStarred }) {
     <>
       <Box
         display="flex"
-        className={[
-          'u-cursorPointer',
-          'u-bgHoverLavender',
-          styles['SearchResult'],
-          isStarred ? styles.isStarred : '',
-        ]}
+        className="SearchResult u-cursorPointer u-bgHoverLavender u-border u-borderRadius5"
       >
         <Box display="flex" alignItems="center" flexGrow="1" py={1} pl={2} onClick={openModal}>
-          <img
-            className={styles['SearchResult-image']}
+          <ItemImg
             src={item.image || PLACEHOLDER_IMAGES[item.type]}
             alt={`search result of type "${item.type}"`}
           />
-          <Box pl={2} className={styles['SearchResult-nameCol']}>
+
+          <Col2 pl={2} display="flex" alignItems="center">
             <Typography variant="bodyBold">{identity}</Typography>
-          </Box>
-          <Box pl={2} className={['u-hiddenSm', styles['SearchResult-fixedCol']]}>
+          </Col2>
+
+          <Col3 pl={2} display="flex" alignItems="center" className="u-hiddenSm">
             <Typography variant="bodySmall">{identityDetail}</Typography>
-          </Box>
+          </Col3>
+
           <Box pl={2} flexGrow={1} className="u-hiddenXs">
             <Typography variant="bodySmall">{description}</Typography>
           </Box>
         </Box>
 
-        <Box
-          p={1}
+        <StarIconContainer
+          px={1}
           display="flex"
           alignItems="center"
-          className={styles['SearchResult-starIcon']}
+          isStarred={isStarred}
           onClick={toggleIsStarredCb}
         >
           {starIcon}
-        </Box>
+        </StarIconContainer>
       </Box>
 
       <Modal open={isModalActive} onClose={closeModal}>
-        <Box
-          className={[
-            'ModalBody',
-            'u-bgLavender',
-            'u-scrollable',
-            styles['SearchResult-modalBody'],
-          ]}
-          p={2}
-        >
+        <Box p={2} className="ModalBody ModalBody--small u-bgLavender">
           <Box
             display="flex"
             alignItems="center"

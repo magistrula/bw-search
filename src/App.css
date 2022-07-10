@@ -38,6 +38,13 @@ body {
   border: 1px solid #333;
   border-radius: 5px;
   box-shadow: 10px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ModalBody--small {
+  width: 350px;
+  max-width: 70vw;
 }
 
 /*Future Work: comprehensive color & border utility classes*/
@@ -54,6 +61,14 @@ body {
   background-color: lavender;
 }
 
+.u-border {
+  border: 1px solid lightgray;
+}
+
 .u-borderBottom {
   border-bottom: 1px solid lightgray;
+}
+
+.u-borderRadius5 {
+  border-radius: 5px;
 }
