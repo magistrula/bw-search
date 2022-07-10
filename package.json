@@ -13,7 +13,9 @@
     "eject": "react-scripts eject",
     "prestart:api": "node tools/createMockDb.js",
     "start:api": "node tools/apiServer.js",
-    "start:mock": "run-p start start:api"
+    "start:mock": "run-p start start:api",
+    "pretty": "prettier -c src/",
+    "pretty:fix": "prettier -w src/"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
