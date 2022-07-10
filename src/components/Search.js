@@ -28,7 +28,6 @@ const Search = function () {
     },
     {
       enabled: !!queryTerm,
-      retry: false,
       initialData: [],
       onError(err) {
         dispatch(flashError('Oops! Could not fetch items'));
@@ -44,7 +43,6 @@ const Search = function () {
     },
     {
       initialData: [],
-      retry: false,
       onError(err) {
         dispatch(flashError('Oops! Could not fetch starred items'));
         throw err;
@@ -99,6 +97,8 @@ const Search = function () {
       <SearchHeader
         changeSearchTerm={changeSearchTerm}
         enableSearch={showSearchField}
+        isFetchingItems={itemsQuery.isFetching}
+        isFetchingStarredItems={starredItemsQuery.isFetching}
         isFilteredByStarred={isFilteredByStarred}
         isSearchEnabled={!isShowingStarredItems}
         numStarredItems={starredItemsQuery.data.length}

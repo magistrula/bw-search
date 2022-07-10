@@ -2,6 +2,10 @@
   height: 60px;
 }
 
+.SearchHeader-fetchStatus {
+  width: 20px;
+}
+
 .SearchHeader-inputField {
   min-width: 100px;
 }
