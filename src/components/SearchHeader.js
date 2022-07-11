@@ -55,6 +55,7 @@ const SearchHeader = function ({
             size="small"
             placeholder="Search for ..."
             value={queryTerm}
+            inputProps={{ 'data-testid': 'SearchHeader-searchTermInput' }}
             onChange={changeSearchTerm}
           />
 
@@ -64,6 +65,7 @@ const SearchHeader = function ({
             alignItems="center"
             className="u-cursorPointer"
             onClick={toggleFilterByStarred}
+            data-testid="SearchHeader-starredOnlyToggle"
           >
             <Checkbox
               checkedIcon={<StarIcon />}
@@ -75,14 +77,25 @@ const SearchHeader = function ({
         </Box>
       )}
 
-      {!isSearchEnabled && <Button onClick={enableSearch}>Return to Search</Button>}
+      {!isSearchEnabled && (
+        <Button onClick={enableSearch} data-testid="SearchHeader-returnToSearch">
+          Return to Search
+        </Button>
+      )}
 
       <Box ml={3}>
-        <Button variant="contained" size="small" onClick={showAllStarredItems}>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={showAllStarredItems}
+          data-testid="SearchHeader-starredItems"
+        >
           <Box mr={1}>Starred:</Box>
           <StarredItemCount display="flex" alignItems="center" justifyContent="center">
             <ClipLoader size={11.5} color="white" loading={isFetchingStarredItems} />
-            {!isFetchingStarredItems && numStarredItems}
+            <div data-testid="SearchHeader-starredItemsCount">
+              {!isFetchingStarredItems && numStarredItems}
+            </div>
           </StarredItemCount>
         </Button>
       </Box>

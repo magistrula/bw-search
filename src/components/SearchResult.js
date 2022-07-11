@@ -65,8 +65,11 @@ const SearchResult = function ({ item, toggleIsStarred }) {
   const closeModal = useCallback(() => setIsModalActive(false), []);
 
   useEffect(() => {
-    const IconType = isStarred ? StarIcon : StarBorderOutlinedIcon;
-    setStarIcon(<IconType color="info" />);
+    if (isStarred) {
+      setStarIcon(<StarIcon color="info" data-testid="SearchResult-isStarredIcon" />);
+    } else {
+      setStarIcon(<StarBorderOutlinedIcon color="info" />);
+    }
   }, [isStarred]);
 
   return (
@@ -74,6 +77,7 @@ const SearchResult = function ({ item, toggleIsStarred }) {
       <Box
         display="flex"
         className="SearchResult u-cursorPointer u-bgHoverLavender u-border u-borderRadius5"
+        data-testid="SearchResult"
       >
         <Box display="flex" alignItems="center" flexGrow="1" py={1} pl={2} onClick={openModal}>
           <ItemImg
@@ -81,15 +85,21 @@ const SearchResult = function ({ item, toggleIsStarred }) {
             alt={`search result of type "${item.type}"`}
           />
 
-          <Col2 pl={2} display="flex" alignItems="center">
+          <Col2 pl={2} display="flex" alignItems="center" data-testid="SearchResult-identity">
             <Typography variant="bodyBold">{identity}</Typography>
           </Col2>
 
-          <Col3 pl={2} display="flex" alignItems="center" className="u-hiddenSm">
+          <Col3
+            pl={2}
+            display="flex"
+            alignItems="center"
+            className="u-hiddenSm"
+            data-testid="SearchResult-identityDetail"
+          >
             <Typography variant="bodySmall">{identityDetail}</Typography>
           </Col3>
 
-          <Box pl={2} flexGrow={1} className="u-hiddenXs">
+          <Box pl={2} flexGrow={1} className="u-hiddenXs" data-testid="SearchResult-description">
             <Typography variant="bodySmall">{description}</Typography>
           </Box>
         </Box>
@@ -100,20 +110,25 @@ const SearchResult = function ({ item, toggleIsStarred }) {
           alignItems="center"
           isStarred={isStarred}
           onClick={toggleIsStarredCb}
+          data-testid="SearchResult-starIcon"
         >
           {starIcon}
         </StarIconContainer>
       </Box>
 
       <Modal open={isModalActive} onClose={closeModal}>
-        <Box p={2} className="ModalBody ModalBody--small u-bgLavender">
+        <Box
+          p={2}
+          className="ModalBody ModalBody--small u-bgLavender"
+          data-testid="SearchResult-modal"
+        >
           <Box
             display="flex"
             alignItems="center"
             className="u-cursorPointer"
             onClick={toggleIsStarredCb}
           >
-            {starIcon}
+            <div data-testid="SearchResult-modalStarIcon">{starIcon}</div>
             <Box ml={0.5}>
               <Typography variant="bodyBold">{identity}</Typography>
             </Box>
