@@ -18,7 +18,7 @@ const SearchResult = function({ item, toggleIsStarred }) {
   let col3Content, col4Content;
 
   if (item.type === 'animal') {
-    col3Content = item.scientificName;
+    col3Content = item.taxonomy.scientificName;
   } else if (item.type === 'company') {
     const { address } = item;
     col3Content = (
